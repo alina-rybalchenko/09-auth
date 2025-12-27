@@ -7,7 +7,7 @@ import {
 } from '@tanstack/react-query';
 
 import NoteDetailsClient from './NoteDetails.client';
-import { fetchNoteById } from '@/lib/api/clientApi';
+import { fetchNoteById } from '@/lib/api/serverApi';
 import { Metadata } from 'next';
 
 interface NotePageProps {
@@ -26,7 +26,7 @@ export async function generateMetadata({
     openGraph: {
       title: `Note: ${note.title}`,
       description: note.content.slice(0, 100),
-      url: `08-zustand-nmditeggz-alinas-projects-3a64970f.vercel.app/notes/${id}`,
+      url: `https://08-zustand-iota-ten.vercel.app/notes/${id}`,
       images: [
         {
           url: 'https://ac.goit.global/fullstack/react/notehub-og-meta.jpg',

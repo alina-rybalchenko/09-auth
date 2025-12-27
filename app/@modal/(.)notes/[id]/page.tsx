@@ -3,7 +3,7 @@ import {
   QueryClient,
   dehydrate,
 } from '@tanstack/react-query';
-import { fetchNoteById } from '@/lib/api/clientApi';
+import { fetchNoteById } from '@/lib/api/serverApi';
 
 import NotePreview from '@/app/@modal/(.)notes/[id]/NotePreview.client';
 
