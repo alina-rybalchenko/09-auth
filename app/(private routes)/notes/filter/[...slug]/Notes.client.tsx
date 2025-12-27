@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useDebouncedCallback } from 'use-debounce';
 import { useQuery, keepPreviousData } from '@tanstack/react-query';
-import { fetchNotes } from '@/lib/api/api';
+import { fetchNotes } from '@/lib/api/clientApi';
 import NoteList from '@/components/NoteList/NoteList';
 import Pagination from '@/components/Pagination/Pagination';
 import SearchBox from '@/components/SearchBox/SearchBox';
@@ -11,6 +11,7 @@ import Error from '@/components/Error/Error';
 import { toast, Toaster } from 'react-hot-toast';
 import css from './NotesPage.module.css';
 import Link from 'next/link';
+import type { Tag } from '@/types/note';
 
 interface NotesClientProps {
   tag?: string;
@@ -29,7 +30,7 @@ export default function NotesClient({ tag }: NotesClientProps) {
     isFetching,
   } = useQuery({
     queryKey: ['notes', search, page, tag],
-    queryFn: () => fetchNotes({ search, page, tag }),
+    queryFn: () => fetchNotes(search, page, tag as Tag | undefined),
     placeholderData: keepPreviousData,
     refetchOnMount: false,
   });

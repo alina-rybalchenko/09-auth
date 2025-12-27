@@ -3,7 +3,7 @@
 
 import { useParams } from 'next/navigation';
 import { useQuery } from '@tanstack/react-query';
-import { fetchNoteById } from '@/lib/api/api';
+import { fetchNoteById } from '@/lib/api/clientApi';
 import NoteDetails from '@/components/NoteDetails/NoteDetails';
 
 export default function NoteDetailsClient() {

@@ -16,25 +16,31 @@ function EditProfile() {
     state => state.clearIsAuthenticated
   );
 
-  const [newUsername, setNewUsername] = useState('');
+  const [newUsername, setNewUsername] = useState<string>('');
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (user) {
-      setNewUsername(user.username || '');
-      return;
-    }
-
     const fetchUser = async () => {
-      try {
-        await checkSession();
-        const fetchedUser = await getMe();
-        if (fetchedUser) {
-          setUser(fetchedUser);
-          setNewUsername(fetchedUser.username || '');
+      if (!user) {
+        try {
+          const isAuth = await checkSession();
+          if (isAuth) {
+            const fetchedUser = await getMe();
+            if (fetchedUser) {
+              setUser(fetchedUser);
+              setNewUsername(fetchedUser.username || '');
+            }
+          } else {
+            clearIsAuthenticated();
+          }
+        } catch {
+          clearIsAuthenticated();
         }
-      } catch {
-        clearIsAuthenticated();
+      } else {
+        setNewUsername(user.username || '');
       }
+
+      setLoading(false);
     };
 
     fetchUser();
@@ -46,12 +52,11 @@ function EditProfile() {
 
   const handleSave = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    if (!user) return;
 
     try {
       await updateMe({ username: newUsername });
-      if (user) {
-        setUser({ ...user, username: newUsername });
-      }
+      setUser({ ...user, username: newUsername });
       router.push('/profile');
     } catch (error) {
       console.error(error);
@@ -62,7 +67,7 @@ function EditProfile() {
     router.back();
   };
 
-  if (!user) return null;
+  if (loading) return null;
 
   return (
     <main className={css.mainContent}>
@@ -70,7 +75,7 @@ function EditProfile() {
         <h1 className={css.formTitle}>Edit Profile</h1>
 
         <Image
-          src={user.avatar}
+          src={user?.avatar || '/default-avatar.png'}
           alt="User Avatar"
           width={120}
           height={120}
@@ -89,7 +94,7 @@ function EditProfile() {
             />
           </div>
 
-          <p>Email: {user.email}</p>
+          <p>Email: {user?.email}</p>
 
           <div className={css.actions}>
             <button type="submit" className={css.saveButton}>
